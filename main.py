@@ -4,7 +4,7 @@
     Author: Daljeet Singh Chhabra
     Language: Python
     Date Created: 04-01-2019
-    Date Modified: 04-01-2019
+    Date Modified: 27-07-2019
 """
 
 import game_control
@@ -14,21 +14,23 @@ import math
 from urllib.request import urlopen
 
 
-url = 'http://192.168.43.72:8080/shot.jpg'              # enter URL of your device from IP WebCam
+url = 'http://192.168.43.83:8080/shot.jpg'              # enter URL of your device from IP WebCam
 
 
 def main():
-    # cap = cv2.VideoCapture(0)                         # For Web Cam
+    cap = cv2.VideoCapture(0)                         # For Web Cam
 
     global url
     while True:
         try:
+            '''
             image_response = urlopen(url)
             imgNp = np.array(bytearray(image_response.read()), dtype=np.uint8)
             frame = cv2.imdecode(imgNp, -1)
+            '''
+            check, frame = cap.read()                 # use these for WebCam only and comment above 3 lines
 
-            # check, frame = cap.read()                 # use these lines in case of WebCam only
-            # frame = cv2.flip(frame, 1)
+            frame = cv2.flip(frame, 1)
             kernel = np.ones((3, 3), np.uint8)
 
             # Defining Region Of Interest towards right side
@@ -115,7 +117,8 @@ def main():
                 if areacnt < 2000:                              # Empty ROI
                     game_control.control(0)
                     game_control.status = 0
-                    cv2.putText(frame, 'Put hand in the box', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                    cv2.putText(frame, 'Show Hand...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                    print('Show Hand...')
                 else:
                     if arearatio < 12:
                         cv2.putText(frame, 'N.A', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
@@ -125,21 +128,21 @@ def main():
                             game_control.control(1)
                             cv2.putText(frame, 'JUMP', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
                         else:
-                            cv2.putText(frame, 'Start Game first...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                            cv2.putText(frame, 'Start Game...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
                     else:                                       # 1 Finger Detected
                         if game_control.status is 1:
                             game_control.control(1)
                             cv2.putText(frame, 'JUMP', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
                         else:
-                            cv2.putText(frame, 'Start Game first...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                            cv2.putText(frame, 'Start Game...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
             elif nod is 2:                                        # 2 Fingers Detected
                 if game_control.status is 1:
                     game_control.control(2)
                     cv2.putText(frame, 'Crouch', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
                 else:
-                    cv2.putText(frame, 'Start Game first...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                    cv2.putText(frame, 'Start Game...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
             elif nod is 3:
                 if arearatio < 27:                              # 3 Fingers Detected
@@ -147,7 +150,7 @@ def main():
                         game_control.control(3)
                         cv2.putText(frame, 'RELOAD', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
                     else:
-                        cv2.putText(frame, 'Start Game first...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                        cv2.putText(frame, 'Start Game...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
             # For additional functionality...
             # 4 Fingers Detected here...
@@ -156,7 +159,7 @@ def main():
                     game_control.control(4)
                     cv2.putText(frame, ' ', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
                 else:
-                    cv2.putText(frame, 'Start Game first...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                    cv2.putText(frame, 'Start Game...', (0, 50), screen_font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
             elif nod is 5:
                 if game_control.status is 1:
@@ -182,7 +185,7 @@ def main():
         except:
             pass
     cv2.destroyAllWindows()
-    # cap.release()
+    cap.release()
 
 
 if __name__ == '__main__':

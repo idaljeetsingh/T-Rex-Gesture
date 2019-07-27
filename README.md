@@ -7,3 +7,10 @@
    * Selenium
    * OpenCV
     
+   # Instructions:
+   Install the required dependencies from the requirements.txt by
+    
+    pip install requirements.txt
+    
+    
+     
